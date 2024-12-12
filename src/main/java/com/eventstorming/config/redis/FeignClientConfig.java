@@ -1,3 +1,4 @@
+forEach: Relation
 path: {{source.boundedContext.name}}/{{{options.packagePath}}}/config/redis
 except: {{contexts.except}}
 ---
