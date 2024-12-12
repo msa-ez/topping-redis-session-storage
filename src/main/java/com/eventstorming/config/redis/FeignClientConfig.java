@@ -5,6 +5,7 @@ except: {{contexts.except}}
 package {{options.package}}.config.redis;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,36 +13,41 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import feign.RequestInterceptor;
-import feign.RequestTemplate;
 
 @Configuration
 public class FeignClientConfig {
 
     @Bean
     public RequestInterceptor requestInterceptor() {
-        return new RequestInterceptor() {
-            @Override
-            public void apply(RequestTemplate template) {
+        return template -> {
+            try {
                 ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
                 if (attributes != null) {
-                    Cookie[] cookies = attributes.getRequest().getCookies();
-                        // Start Generation Here
+                    HttpServletRequest request = attributes.getRequest();
+                    
+                    // 세션 ID를 SESSION 헤더로 전달
+                    String sessionId = request.getSession().getId();
+                    template.header("SESSION", sessionId);
+                    
+                    // 모든 쿠키도 함께 전달
+                    Cookie[] cookies = request.getCookies();
+                    if (cookies != null) {
+                        StringBuilder cookieValue = new StringBuilder();
                         for (Cookie cookie : cookies) {
-                            if ("JSESSIONID".equals(cookie.getName())) {
-                                template.header("Cookie", "JSESSIONID=" + cookie.getValue());
-                                break;
+                            if (cookieValue.length() > 0) {
+                                cookieValue.append("; ");
                             }
+                            cookieValue.append(cookie.getName()).append("=").append(cookie.getValue());
                         }
-                    // 세션 ID를 헤더에 추가
-                    // String cookies = "JSESSIONID=YmRjYWNmMmMtMmM4MC00Zjg1LWEwY2ItNDY3NmMyZDI1YzE3; SameSite=None;";
-
-                    // 쿠키 헤더에 설정
-                    // template.header("Cookie", cookies);
+                        template.header("Cookie", cookieValue.toString());
+                    }
                 }
+            } catch (Exception e) {
+                template.header("Content-Type", "application/json");
             }
         };
     }
-}
+} 
 <function>
     let isPostInvocation = ((this.source._type.endsWith("Event") || this.source._type.endsWith("Policy")) && this.target._type.endsWith("Command"))
     let isExternalInvocation = (this.source.boundedContext.name != this.target.boundedContext.name)

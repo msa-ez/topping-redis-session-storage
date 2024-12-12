@@ -31,6 +31,8 @@ hystrix:
 spring:
   application:
     name: {{toLowerCase name}}
+  session:
+    store-type: redis
   redis:
     host: localhost # redis host
     port: 6379 # port
@@ -97,6 +99,8 @@ server:
 ---
 spring:
   profiles: docker
+  session:
+    store-type: redis
   redis:
     host: localhost # redis host
     port: 6379 # port

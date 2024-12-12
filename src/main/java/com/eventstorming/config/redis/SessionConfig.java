@@ -4,19 +4,16 @@ package {{options.package}}.config.redis;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.session.web.http.CookieHttpSessionIdResolver;
-import org.springframework.session.web.http.DefaultCookieSerializer;
+import org.springframework.session.web.http.HeaderHttpSessionIdResolver;
 import org.springframework.session.web.http.HttpSessionIdResolver;
+
+
 
 @Configuration
 public class SessionConfig {
-
     @Bean
     public HttpSessionIdResolver httpSessionIdResolver() {
-        CookieHttpSessionIdResolver resolver = new CookieHttpSessionIdResolver();
-        DefaultCookieSerializer cookieSerializer = new DefaultCookieSerializer();
-        cookieSerializer.setCookieName("JSESSIONID"); // 원하는 세션 쿠키 이름으로 변경
-        resolver.setCookieSerializer(cookieSerializer);
-        return resolver;
+        // Feign Client를 통한 서비스 간 통신을 위해 Header 기반 세션 ID 리졸버 사용
+        return new HeaderHttpSessionIdResolver("SESSION");
     }
 }
