@@ -49,7 +49,7 @@ public class FeignClientConfig {
     }
 } 
 <function>
-    let isPostInvocation = ((this.source._type.endsWith("Event") || this.source._type.endsWith("Policy")) && this.target._type.endsWith("Command"))
+    let isPostInvocation = ((this.source._type.endsWith("Event")  && this.target._type.endsWith("Command")) || (this.source._type.endsWith("Command") && this.target._type.endsWith("View")))
     let isExternalInvocation = (this.source.boundedContext.name != this.target.boundedContext.name)
 
     this.contexts.except = !(isExternalInvocation && isPostInvocation)
