@@ -1,6 +1,4 @@
-A guide for setting up Redis session storage in your microservice application.
-
-## Setup Instructions
+### Setup Instructions
 
 ### 1. Configure Redis Password
 Configure Redis settings in your microservice's `application.yml`:
