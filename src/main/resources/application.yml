@@ -87,10 +87,20 @@ server:
   error:
     include-message: always
 {{/if}}
+  servlet:
+    session:
+      cookie:
+        http-only: true # 브라우저에서 해당 쿠키에 대한 JavaScript 접근을 제한합니다.
+        secure: true # 쿠키가 HTTPS로 암호화된 연결에서만 쿠키가 전송됩니다.
+      timeout: 3600 # 세션 유효 시간
 
 ---
 spring:
   profiles: docker
+  redis:
+    host: localhost # redis host
+    port: 6379 # port
+    password: # password, 없으면 제거
   jpa:
     properties:
       hibernate:
